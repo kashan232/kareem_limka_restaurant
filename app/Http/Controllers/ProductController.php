@@ -57,13 +57,8 @@ class ProductController extends Controller
                 'product_name'     => $request->product_name,
                 'category'         => $request->category,
                 'brand'            => $request->brand,
-                'stock'            => $request->stock,
-                'wholesale_price'            => $request->wholesale_price,
                 'retail_price'            => $request->retail_price,
-                'color'              => $request->color,
                 'unit'             => $request->unit,
-                'alert_quantity'   => $request->alert_quantity,
-                'note'             => $request->note,
                 'created_at'       => Carbon::now(),
                 'updated_at'       => Carbon::now(),
             ]);
@@ -107,12 +102,8 @@ class ProductController extends Controller
             $product->product_name   = $request->product_name;
             $product->category       = $request->category;
             $product->brand          = $request->brand;
-            $product->color            = $request->color;
             $product->unit           = $request->unit;
-            $product->alert_quantity = $request->alert_quantity;
             $product->retail_price   = $request->retail_price;  // Including retail price update
-            $product->wholesale_price   = $request->wholesale_price;  // Including retail price update
-            $product->note           = $request->note;
             $product->updated_at     = Carbon::now();
 
             // Save updated product

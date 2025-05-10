@@ -84,39 +84,10 @@
                                                     </div>
                                                 </div>
 
-
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Color</label>
-                                                        <input type="text" class="form-control" name="color" value="{{ $product_details->color }}" required>
-                                                    </div>
-                                                </div>
-
-                                                
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label>Alert Quantity</label>
-                                                        <input type="number" name="alert_quantity" class="form-control" value="{{ $product_details->alert_quantity }}" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group ">
-                                                        <label class="form-label">Wholesale Price</label>
-                                                        <input type="number" class="form-control " name="wholesale_price" value="{{ $product_details->wholesale_price }}">
-                                                    </div>
-                                                </div>
-
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label>Retail Price</label>
                                                         <input type="text" name="retail_price" class="form-control" value="{{ $product_details->retail_price }}">
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-sm-12">
-                                                    <div class="form-group">
-                                                        <label>Note</label>
-                                                        <textarea name="note" class="form-control">{{ $product_details->note }}</textarea>
                                                     </div>
                                                 </div>
                                             </div>

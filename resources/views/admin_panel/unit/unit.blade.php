@@ -15,7 +15,7 @@
             <div class="bodywrapper__inner">
 
                 <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
-                    <h6 class="page-title">Models</h6>
+                    <h6 class="page-title">Sizes</h6>
                     <div class="d-flex flex-wrap justify-content-end gap-2 align-items-center breadcrumb-plugins">
                        
                         <button type="button" class="btn btn-sm btn-outline--primary cuModalBtn"

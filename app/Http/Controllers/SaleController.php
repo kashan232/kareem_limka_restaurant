@@ -101,24 +101,6 @@ class SaleController extends Controller
         $itemCategories = $request->input('item_category', []);
         $quantities = $request->input('quantity', []);
 
-        // Step 1: Validate stock for all products
-        foreach ($itemNames as $key => $item_name) {
-            $item_category = $itemCategories[$key] ?? '';
-            $quantity = $quantities[$key] ?? 0;
-
-            $product = Product::where('product_name', $item_name)
-                ->where('category', $item_category)
-                ->first();
-
-            if (!$product) {
-                return redirect()->back()->with('error', "Product $item_name in category $item_category not found.");
-            }
-
-            if ($product->stock < $quantity) {
-                return redirect()->back()->with('error', "Insufficient stock for product $item_name. Available: {$product->stock}, Required: $quantity.");
-            }
-        }
-
         // Prepare data for storage
         $discount = (float) ($request->input('discount', 0));
         $totalPrice = (float) $request->input('total_price', 0);
@@ -149,21 +131,6 @@ class SaleController extends Controller
         ];
 
         $sale = Sale::create($saleData);
-
-        // Step 3: Deduct stock after successfully saving the sale
-        foreach ($itemNames as $key => $item_name) {
-            $item_category = $itemCategories[$key] ?? '';
-            $quantity = $quantities[$key] ?? 0;
-
-            $product = Product::where('product_name', $item_name)
-                ->where('category', $item_category)
-                ->first();
-
-            if ($product) {
-                $product->stock -= $quantity;
-                $product->save();
-            }
-        }
 
         return redirect()->route('sale-receipt', [
             'id' => $sale->id,

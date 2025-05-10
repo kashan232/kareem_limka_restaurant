@@ -31,12 +31,9 @@
                                         style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Name | Color </th>
+                                                <th>Name  </th>
                                                 <th>Category | Brand</th>
-                                                <th>Stock </th>
-                                                <th>Alert Qty</th>
                                                 <th>Model</th>
-                                                <th>Wholesale Price</th>
                                                 <th>Retail Price</th>
                                                 <th>Action</th>
                                             </tr>
@@ -48,22 +45,13 @@
                                                         <span
                                                             class="fw-bold text--primary">{{ $product->product_name }}</span>
                                                         <br>
-                                                        <span class="text--small ">{{ $product->color }}</span>
                                                     </td>
                                                     <td>
                                                         {{ $product->category }}
                                                         <br>
                                                         <span class="text--primary">{{ $product->brand }}</span>
                                                     </td>
-                                                    <td>
-                                                        {{ $product->stock }}
-                                                    </td>
-                                                    <td>
-                                                        <strong
-                                                            class="badge badge--danger">{{ $product->alert_quantity }}</strong>
-                                                    </td>
                                                     <td>{{ $product->unit }}</td>
-                                                    <td>{{ $product->wholesale_price }}</td>
                                                     <td>{{ $product->retail_price }}</td>
                                                     <td>
                                                         <div class="button--group">

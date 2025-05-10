@@ -70,7 +70,6 @@
                                                     <span class="fw-bold">{{ $Sale->Payable_amount }}</span>
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('sale-return', ['id' => $Sale->id]) }}" class="btn btn-sm btn-outline--primary"> Sale Return</a>
                                                     <a href="{{ route('sale-receipt', ['id' => $Sale->id]) }}" class="btn btn-sm btn-outline--primary"> Print Receipt</a>
                                                 </td>
 

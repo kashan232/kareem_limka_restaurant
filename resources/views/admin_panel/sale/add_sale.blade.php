@@ -71,7 +71,7 @@
                                         <div class="col-xl-4 col-sm-6">
                                             <div class="form-group" id="supplier-wrapper">
                                                 <label class="form-label">Customers</label>
-                                                <input type="text" name="customer" class="form-control">
+                                                <input type="text" name="customer" class="form-control" placeholder="Walk-In">
                                             </div>
                                         </div>
 

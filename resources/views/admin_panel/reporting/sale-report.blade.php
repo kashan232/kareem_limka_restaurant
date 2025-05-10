@@ -49,24 +49,25 @@
                         <div class="card-body">
                             <!-- Sales Report Table -->
                             <div class="card mt-4">
-                                <div class="card-body">
-                                    <table class="display table table--light style--two bg--white dataTable no-footer" style="width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>Invoice No</th>
-                                                <th>Customer</th>
-                                                <th>Sale Date</th>
-                                                <th>Items</th>
-                                                <th>Quantity</th>
-                                                <th>Total Price</th>
-                                                <th>Discount</th>
-                                                <th>Payable Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="salesTableBody">
-                                            <!-- Filtered Sales Data Will Append Here -->
-                                        </tbody>
-                                    </table>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="display table table--light style--two bg--white dataTable no-footer" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Invoice No | Sale Date</th>
+                                                    <th>Customer</th>
+                                                    <th>Items</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total Price</th>
+                                                    <th>Discount</th>
+                                                    <th>Payable Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="salesTableBody">
+                                                <!-- Filtered Sales Data Will Append Here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mt-3">
@@ -86,7 +87,9 @@
 <script>
     // PDF generation script
     function generatePDF() {
-        const { jsPDF } = window.jspdf;
+        const {
+            jsPDF
+        } = window.jspdf;
         const doc = new jsPDF();
 
         // Table Heading
@@ -160,9 +163,8 @@
                             totalNetAmount += payable;
 
                             tableData += `<tr>
-                                <td>${sale.invoice_no}</td>
+                                <td>${sale.invoice_no} <br> ${sale.sale_date}</td>
                                 <td>${sale.customer}</td>
-                                <td>${sale.sale_date}</td>
                                 <td>${JSON.parse(sale.item_name).join(", ")}</td>
                                 <td>${JSON.parse(sale.quantity).join(", ")}</td>
                                 <td>${sale.total_price}</td>

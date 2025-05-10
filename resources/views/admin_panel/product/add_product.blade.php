@@ -86,25 +86,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group ">
-                                                        <label class="form-label">Initial stock</label>
-                                                        <input type="text" class="form-control " name="stock" value="0">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-sm-6">
-                                                    <div class="form-group ">
-                                                        <label class="form-label">Color</label>
-                                                        <input type="text" class="form-control " name="color" value="Null">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group ">
-                                                        <label class="form-label">Wholesale Price</label>
-                                                        <input type="number" class="form-control " name="wholesale_price" value="Null">
-                                                    </div>
-                                                </div>
+                                              
 
                                                 <div class="col-sm-6">
                                                     <div class="form-group ">
@@ -113,21 +95,6 @@
                                                     </div>
                                                 </div>
 
-                                                
-                                               
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label>Alert Quantity</label>
-                                                        <input type="number" name="alert_quantity"
-                                                            class="form-control" value="0">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12">
-                                                    <div class="form-group">
-                                                        <label>Note</label>
-                                                        <textarea name="note" class="form-control"></textarea>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

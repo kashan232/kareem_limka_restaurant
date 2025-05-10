@@ -81,12 +81,12 @@
     <div class="receipt-container">
         <!-- Receipt Header -->
         <div class="receipt-header">
-            <p>ZAM ZAM ELECTRONIC</p>
+            <p>SHELBYS RESTAURANT <br> & <br> FAST FOOD</p>
         </div>
 
         <!-- Sale Details -->
         <div class="details">
-            <p><strong>Memo No:</strong> {{ $sale->invoice_no }}</p>
+            <p><strong>Invoice No:</strong> {{ $sale->invoice_no }}</p>
             <p><strong>Customer:</strong> {{ $sale->customer }}</p>
             <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($sale->created_at)->format('d/m/Y h:i A') }}</p>
         </div>
