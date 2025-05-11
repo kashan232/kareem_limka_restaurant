@@ -156,7 +156,7 @@
     </style>
     <div class="wrapper">
         <div style="width:100%; text-align:center;">
-            <img src="assets/admin/images/logo.png" alt="image" style="width: 150px;">
+            <img src="assets/admin/images/logo.jpg" alt="image" style="width: 150px; height:150px; border-radius:50%">
         </div>
         <!-- <h2>Admin Login</h2> -->
         <form method="POST" action="{{ route('login') }}">

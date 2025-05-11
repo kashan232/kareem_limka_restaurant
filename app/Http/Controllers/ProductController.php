@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Unit;
+use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,9 @@ class ProductController extends Controller
         if (Auth::id()) {
             $userId = Auth::id();
             // $all_unit = Unit::where('admin_or_user_id', '=', $userId)->get();
-            $all_product = Product::where('admin_or_user_id', '=', $userId)->get();
+            $all_product = Product::with(['category', 'subcategory'])->get();
+
+            // dd($all_product);
             return view('admin_panel.product.all_product', [
                 // 'all_unit' => $all_unit
                 'all_product' => $all_product,
@@ -44,30 +47,64 @@ class ProductController extends Controller
             return redirect()->back();
         }
     }
+
+    public function getSubcategories($category)
+    {
+        $subcategories = SubCategory::where('category_id', $category)->get();
+        return response()->json($subcategories);
+    }
+    public function getItems($category, $subcategory)
+    {
+        $items = Product::where('category_id', $category)
+            ->where('subcategory_id', $subcategory)
+            ->with('unit:id,unit') // Yeh ensure karega ke sirf unit ka name aaye
+            ->get(['id', 'name', 'unit_id', 'price']);
+
+        // Data modify karke response bhejna
+        $items = $items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'unit' => $item->unit ? $item->unit->unit : '', // Agar unit available hai toh name le lo
+                'price' => $item->price,
+            ];
+        });
+
+        return response()->json($items);
+    }
+
+
+
     public function store_product(Request $request)
     {
-        if (Auth::id()) {
-            $usertype = Auth()->user()->usertype;
+        if (Auth::check()) {
             $userId = Auth::id();
 
-
-            // Create the product with or without the image
+            // Handle image upload if provided
+            $imageName = null;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/products'), $imageName); // ✅ Correct path
+            }
+        
+            // Create product
             Product::create([
-                'admin_or_user_id' => $userId,
-                'product_name'     => $request->product_name,
-                'category'         => $request->category,
-                'brand'            => $request->brand,
-                'retail_price'            => $request->retail_price,
-                'unit'             => $request->unit,
-                'created_at'       => Carbon::now(),
-                'updated_at'       => Carbon::now(),
+                'admin_or_user_id'    => $userId,
+                'name'   => $request->product_name, 
+                'category_id'   => $request->category,
+                'subcategory_id' => $request->sub_category,
+                'unit'       => $request->unit_id,
+                'retail_price'         => $request->retail_price,
+                'image'         => $imageName, // This will be null if no image is uploaded
             ]);
 
             return redirect()->back()->with('success', 'Product Added Successfully');
-        } else {
-            return redirect()->back();
         }
+
+        return redirect()->back();
     }
+
     public function edit_product($id)
     {
         if (Auth::id()) {
@@ -97,13 +134,34 @@ class ProductController extends Controller
             // Find the product by ID
             $product = Product::findOrFail($id);
 
+            // Handle image upload if a new image is provided
+            if ($request->hasFile('image')) {
+                // Delete the old image if exists
+                if ($product->image) {
+                    $oldImagePath = public_path('product_images/' . $product->image);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+
+                // Upload new image
+                $image = $request->file('image');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('product_images'), $imageName);
+
+                // Set the new image name in the product data
+                $product->image = $imageName;
+            }
 
             // Update product details
             $product->product_name   = $request->product_name;
             $product->category       = $request->category;
             $product->brand          = $request->brand;
+            $product->sku            = $request->sku;
             $product->unit           = $request->unit;
+            $product->alert_quantity = $request->alert_quantity;
             $product->retail_price   = $request->retail_price;  // Including retail price update
+            $product->note           = $request->note;
             $product->updated_at     = Carbon::now();
 
             // Save updated product
@@ -150,19 +208,5 @@ class ProductController extends Controller
         } else {
             return redirect()->back();
         }
-    }
-    public function delete_product(Request $request)
-    {
-        if (Auth::id()) {
-            $product = Product::find($request->id);
-
-            if ($product) {
-                $product->delete();
-                return response()->json(['success' => true, 'message' => 'Product deleted successfully.']);
-            } else {
-                return response()->json(['success' => false, 'message' => 'Product not found.']);
-            }
-        }
-        return response()->json(['success' => false, 'message' => 'Unauthorized request.']);
     }
 }

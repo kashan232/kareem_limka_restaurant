@@ -17,9 +17,9 @@
             <div class="bodywrapper__inner">
 
                 <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
-                    <h6 class="page-title">Categories</h6>
+                    <h6 class="page-title">Sub Categories</h6>
                     <div class="d-flex flex-wrap justify-content-end gap-2 align-items-center breadcrumb-plugins">
-                                               <button type="button" class="btn btn-sm btn-outline--primary cuModalBtn" data-modal_title="Add New Category">
+                                               <button type="button" class="btn btn-sm btn-outline--primary cuModalBtn" data-modal_title="Add New Sub Category">
                             <i class="las la-plus"></i>Add New </button>
                     </div>
                 </div>
@@ -38,17 +38,18 @@
                                         <thead>
                                             <tr>
                                                 <th>S.N.</th>
-                                                <th>Name</th>
-                                                <th>Products</th>
+                                                <th>Category Name</th>
+                                                <th>Sub-Category Name</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($all_categories as $categories)
+                                            @foreach ($all_sub_categories as $sub_categories)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $categories->category }}</td>
-                                                <td>{{ $categories->products_count }}</td>
+                                                <td>{{ $sub_categories->category->category }}</td>
+                                                <td>{{ $sub_categories->name }}</td>
+                                                {{-- <td>{{ $categories->products_count }}</td> --}}
                                                 <td>
                                                     <div class="button--group">
 
@@ -58,7 +59,7 @@
                                                             <i class="la la-pencil"></i>Edit </button> --}}
 
                                                         <button type="button" class="btn btn-sm btn-outline-primary editCategoryBtn"  data-toggle="modal" 
-                                                        data-target="#editcategory" data-category-id="{{ $categories->id }}" data-category-name="{{ $categories->category }}">
+                                                        data-target="#editcategory" data-sub-category-id="{{ $sub_categories->id }}" data-category-id="{{ $sub_categories->category->id }}" data-sub-category-name="{{ $sub_categories->name }}">
                                                             <i class="la la-pencil"></i>Edit
                                                         </button>
 
@@ -66,7 +67,7 @@
                                                         {{-- <button type="button"
                                                             class="btn btn-sm btn-outline-danger  disabled  confirmationBtn"
                                                             data-question="Are you sure to delete this category?"
-                                                            data-action="https://script.viserlab.com/torylab/admin/category/delete/6">
+                                                            data-action="sukkur_kitchen/category/delete/6">
                                                             <i class="la la-trash"></i>Delete </button> --}}
                                                     </div>
                                                 </td>
@@ -90,14 +91,23 @@
                                     <i class="las la-times"></i>
                                 </button>
                             </div>
-                            <form action="{{ route('store-category') }}" method="POST">
+                            <form action="{{ route('store-subcategory') }}" method="POST">
                                 @csrf
 
                                 <div class="modal-body">
                                     
                                 <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="category" class="form-control" required>
+                                    <label>Category Name</label>
+                                    <select name="category_id" id="" class="form-select">
+                                        <option selected disabled>Select Category</option>
+                                        @foreach ($categories as $item)
+                                            <option value="{{ $item->id }}">{{ $item->category }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sub-Category Name</label>
+                                    <input type="text" id="sub_category" name="sub_category" class="form-control" required>
                                 </div>
                         </div>
                         <div class="modal-footer">
@@ -112,18 +122,25 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editcategoryLabel">Edit Category</h5>
+                            <h5 class="modal-title" id="editcategoryLabel">Edit Sub Category</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="{{ route('update-category') }}" method="POST">
+                        <form action="{{ route('update-subcategory') }}" method="POST">
                             @csrf
+                            <input type="hidden" name="sub_cat_id" id="sub_cat_id">
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="hidden" id="editCategoryId" name="category_id" class="form-control" required>
-                                    <input type="text" id="editCategoryName" name="category_name" class="form-control">
+                                    <label>Category Name</label>
+                                    <select name="category_id" id="edit_category_input" class="form-select">
+                                        {{-- <option selected disabled>Select Category</option> --}}
+                                        @foreach ($categories as $item)
+                                            <option value="{{ $item->id }}">{{ $item->category }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label class="mt-3">Sub Category Name</label>
+                                    <input type="text" id="edit_sub_category" name="sub_category" class="form-control">
                                 </div>
                             </div>
 
@@ -146,7 +163,7 @@
                                 <i class="la la-times" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <form method="post" action="https://script.viserlab.com/torylab/admin/category/import" id="importForm" enctype="multipart/form-data">
+                        <form method="post" action="sukkur_kitchen/category/import" id="importForm" enctype="multipart/form-data">
                             <input type="hidden" name="_token" value="zv105s8kd1s2nyZ6nvoqU6pROYAnsCPYkYXTDlWn">
                             <div class="modal-body">
                                 <div class="form-group">
@@ -168,7 +185,7 @@
                                             Supported files: <b class="fw-bold">csv</b>
                                         </small>
                                         <small>
-                                            Download sample template file from here <a href="https://script.viserlab.com/torylab/assets/files/sample/category.csv" title="Download csv file" class="text--primary" download>
+                                            Download sample template file from here <a href="https://script.viserlab.com/sukkur_kitchen/assets/files/sample/category.csv" title="Download csv file" class="text--primary" download>
                                                 <b>csv</b>
                                             </a>
                                         </small>
@@ -217,11 +234,17 @@
             $('.editCategoryBtn').click(function() {
                 // Extract category ID and name from data attributes
                 var categoryId = $(this).data('category-id');
-                var categoryName = $(this).data('category-name');
-
-                // Set the extracted values in the modal fields
-                $('#editCategoryId').val(categoryId);
-                $('#editCategoryName').val(categoryName);
+                var subcategoryId = $(this).data('sub-category-id');
+                var subcategory = $(this).data('sub-category-name');
+                $("#sub_cat_id").val(subcategoryId);
+                 // Set the extracted values in the modal fields
+                $('#edit_category_input option').each(function() {
+                    if ($(this).val() == categoryId) {
+                            $(this).prop('selected', true).change();
+                    }
+                });
+                                // alert(subcategory);
+                $('#edit_sub_category').val(subcategory);
             });
         });
     </script>

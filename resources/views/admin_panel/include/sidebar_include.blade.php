@@ -3,7 +3,7 @@
     <div class="sidebar__inner">
         <div class="sidebar__logo">
             <a href="#" class="sidebar__main-logo">
-                <img src="{{ asset('assets/admin/images/logo.png') }}" alt="image">
+                <img src="{{ asset('assets/admin/images/logo.jpg') }}" alt="image">
             </a>
         </div>
         <div class="sidebar__menu-wrapper" id="sidebar__menuWrapper">
@@ -22,7 +22,12 @@
                         <span class="menu-title">Categories</span>
                     </a>
                 </li>
-
+                <li class="sidebar-menu-item  ">
+                    <a href="{{ route('subcategory') }}" class="nav-link">
+                        <i class="menu-icon la la-dot-circle"></i>
+                        <span class="menu-title">Sub Categories</span>
+                    </a>
+                </li>
                 <li class="sidebar-menu-item ">
                     <a href="{{ route('brand') }}" class="nav-link ">
                         <i class="menu-icon fas fa-building"></i>

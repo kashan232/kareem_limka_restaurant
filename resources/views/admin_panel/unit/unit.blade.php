@@ -19,7 +19,7 @@
                     <div class="d-flex flex-wrap justify-content-end gap-2 align-items-center breadcrumb-plugins">
                        
                         <button type="button" class="btn btn-sm btn-outline--primary cuModalBtn"
-                            data-modal_title="Add New Models">
+                            data-modal_title="Add New Size">
                             <i class="las la-plus"></i>Add New </button>
                      
                     </div>

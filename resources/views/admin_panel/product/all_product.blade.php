@@ -31,39 +31,44 @@
                                         style="width:100%">
                                         <thead>
                                             <tr>
-                                                <th>Name  </th>
+                                                <th>Name | Image  </th>
                                                 <th>Category | Brand</th>
-                                                <th>Model</th>
+                                                <th>Size </th>
                                                 <th>Retail Price</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($all_product as $product)
-                                                <tr>
-                                                    <td class="long-text">
-                                                        <span
-                                                            class="fw-bold text--primary">{{ $product->product_name }}</span>
-                                                        <br>
-                                                    </td>
-                                                    <td>
-                                                        {{ $product->category }}
-                                                        <br>
-                                                        <span class="text--primary">{{ $product->brand }}</span>
-                                                    </td>
-                                                    <td>{{ $product->unit }}</td>
-                                                    <td>{{ $product->retail_price }}</td>
-                                                    <td>
-                                                        <div class="button--group">
-                                                            <a href="{{ route('edit-product', ['id' => $product->id]) }}"
-                                                                class="btn btn-sm btn-outline--primary ms-1 editBtn"><i
-                                                                    class="las la-pen"></i> Edit</a>
-                                                            <button class="btn btn-danger delete-product"
-                                                                data-id="{{ $product->id }}">Delete</button>
-
-                                                        </div>
-                                                    </td>
+                                            <tr>
+                                                <td class="long-text">
+                                                    <span class="fw-bold text--primary">{{ $product->name }}</span><br>
+                                                    <img src="{{ asset('uploads/products/' . $product->image) }}" width="60" alt="product image">
+                                                </td>
+                                                <td>
+                                                    <strong>Category:</strong>
+                                                    {{ $product->category->category ?? 'ID: ' . $product->category_id }}
+                                                    <br>
+                                                    <strong>SubCategory:</strong>
+                                                    {{ $product->subcategory->name ?? 'ID: ' . $product->subcategory_id }}
+                                                </td>
+                                                
+                                                
+                                                
+                                                
+                                                <td>{{ $product->unit }}</td>
+                                                <td>{{ $product->retail_price }}</td>
+                                                <td>
+                                                    <div class="button--group">
+                                                        <a href="{{ route('edit-product', ['id' => $product->id]) }}" class="btn btn-sm btn-outline--primary ms-1 editBtn">
+                                                            <i class="las la-pen"></i> Edit
+                                                        </a>
+                                                        <button class="btn btn-danger delete-product" data-id="{{ $product->id }}">Delete</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             @endforeach
+                                            
                                         </tbody>
                                     </table>
                                     <!-- table end -->
@@ -121,7 +126,7 @@
                                     console.error("Error:", error);
                                     Swal.fire("Error!", "Something went wrong.",
                                         "error");
-                                });
+                                }); 
                         }
                     });
                 });

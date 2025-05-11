@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Sub_cat_Cotnroller;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -55,6 +56,14 @@ Route::get('/get-product-by-barcode', [HomeController::class, 'getProductByBarco
 Route::get('/category', [CategoryController::class, 'category'])->middleware(['auth','admin'])->name('category');
 Route::post('/store-category', [CategoryController::class, 'store_category'])->name('store-category');
 Route::post('/update-category', [CategoryController::class, 'update_category'])->name('update-category');
+
+//Sub category 
+Route::get('/sub-category', [Sub_cat_Cotnroller::class, 'sub_category'])->middleware(['auth', 'admin'])->name('subcategory');
+Route::post('/sub-store-category', [Sub_cat_Cotnroller::class, 'store_sub_category'])->name('store-subcategory');
+Route::post('/sub-update-category', [Sub_cat_Cotnroller::class, 'update_sub_category'])->name('update-subcategory');
+Route::get('/get-subcategories/{category}', [ProductController::class, 'getSubcategories'])->name('get.subcategories');
+Route::get('/get-items/{category}/{subcategory}', [ProductController::class, 'getItems'])->name('get.items');
+
 
 //brand
 Route::get('/brand', [BrandController::class, 'brand'])->middleware(['auth','admin'])->name('brand');

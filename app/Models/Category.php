@@ -12,10 +12,13 @@ class Category extends Model
     use SoftDeletes;
 
      // In Category model
+
+     
      public function products()
      {
-         return $this->hasMany(Product::class, 'category', 'category');
+         return $this->hasMany(Product::class, 'category_id');
      }
+     
      
     protected $fillable = [
         'admin_or_user_id',
