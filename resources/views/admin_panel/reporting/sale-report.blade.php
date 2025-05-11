@@ -13,7 +13,7 @@
     <div class="body-wrapper">
         <div class="bodywrapper__inner">
             <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
-                <h6 class="page-title">Sale Reports</h6>
+                <h6 class="page-title">Orders Reports</h6>
             </div>
             <div class="row mb-none-30">
                 <div class="col-lg-12 col-md-12 mb-30">
@@ -49,25 +49,24 @@
                         <div class="card-body">
                             <!-- Sales Report Table -->
                             <div class="card mt-4">
-                                <div class="card-body p-0">
-                                    <div class="table-responsive">
-                                        <table class="display table table--light style--two bg--white dataTable no-footer" style="width: 100%;">
-                                            <thead>
-                                                <tr>
-                                                    <th>Invoice No | Sale Date</th>
-                                                    <th>Customer</th>
-                                                    <th>Items</th>
-                                                    <th>Quantity</th>
-                                                    <th>Total Price</th>
-                                                    <th>Discount</th>
-                                                    <th>Payable Amount</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="salesTableBody">
-                                                <!-- Filtered Sales Data Will Append Here -->
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div class="card-body">
+                                    <table class="display table table--light style--two bg--white dataTable no-footer" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice No</th>
+                                                <th>Customer</th>
+                                                <th>Sale Date</th>
+                                                <th>Items</th>
+                                                <th>Quantity</th>
+                                                <th>Total Price</th>
+                                                <th>Discount</th>
+                                                <th>Payable Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="salesTableBody">
+                                            <!-- Filtered Sales Data Will Append Here -->
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="mt-3">
@@ -156,30 +155,32 @@
 
                     if (response.length > 0) {
                         response.forEach(sale => {
-                            let discount = parseInt(sale.discount);
-                            let payable = parseInt(sale.Payable_amount);
+                            let discount = parseFloat(sale.discount);
+                            let payable = parseFloat(sale.payable_amount);
 
                             totalDiscount += discount;
                             totalNetAmount += payable;
 
                             tableData += `<tr>
-                                <td>${sale.invoice_no} <br> ${sale.sale_date}</td>
-                                <td>${sale.customer}</td>
-                                <td>${JSON.parse(sale.item_name).join(", ")}</td>
-                                <td>${JSON.parse(sale.quantity).join(", ")}</td>
-                                <td>${sale.total_price}</td>
-                                <td>${discount}</td>
-                                <td><strong>${payable}</strong></td>
-                            </tr>`;
+                <td>INV-${sale.id}</td> <!-- id used as Invoice No -->
+                <td>${sale.customer_name ?? '-'}</td> <!-- customer_name -->
+                <td>${sale.sale_date}</td>
+                <td>${sale.item_name ? JSON.parse(sale.item_name).join(", ") : '-'}</td> <!-- item_name (JSON array) -->
+                <td>${sale.quantity ? JSON.parse(sale.quantity).join(", ") : '-'}</td> <!-- quantity (JSON array) -->
+                <td>${sale.total_price}</td> <!-- total_price -->
+                <td>${discount}</td> <!-- discount -->
+                <td><strong>${payable}</strong></td> <!-- payable_amount -->
+            </tr>`;
                         });
                     } else {
                         tableData = '<tr><td colspan="8" class="text-center">No sales found for the selected date range.</td></tr>';
                     }
 
                     $('#salesTableBody').html(tableData);
-                    $('#totalDiscount').text(totalDiscount);
-                    $('#totalNetAmount').text(totalNetAmount);
+                    $('#totalDiscount').text(totalDiscount.toFixed(2));
+                    $('#totalNetAmount').text(totalNetAmount.toFixed(2));
                 },
+
                 error: function(xhr, status, error) {
                     console.log(xhr.responseText);
                 }

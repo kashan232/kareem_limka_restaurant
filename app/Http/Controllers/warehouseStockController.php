@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\ItemCategory;
+use App\Models\ItemProduct;
 use App\Models\Product;
 use App\Models\StockTransfer;
 use App\Models\Warehouse;
@@ -21,7 +23,7 @@ class warehouseStockController extends Controller
             $userId = Auth::id();
             // dd($userId);
             $Warehouses = Warehouse::get();
-            $Category = Category::get();
+            $Category = ItemCategory::get();
             // dd($Purchases);
             return view('admin_panel.warehousestock.add_warehouse_stock', [
                 'Warehouses' => $Warehouses,
@@ -40,7 +42,7 @@ class warehouseStockController extends Controller
             'supplier_name' => 'required',
             'item_category' => 'required|array',
             'item_name' => 'required|array',
-            'unit' => 'required|array',
+            'brand' => 'required|array',
             'quantity' => 'required|array',
         ]);
 
@@ -50,7 +52,7 @@ class warehouseStockController extends Controller
 
         foreach ($request->item_name as $index => $productName) {
             $category = $request->item_category[$index];
-            $model = $request->unit[$index];
+            $model = $request->brand[$index];
             $quantity = (int) $request->quantity[$index];
 
             // Insert new stock entry
@@ -70,7 +72,6 @@ class warehouseStockController extends Controller
                 'warehouse_name' => $warehouseName,
                 'category' => $category,
                 'product_name' => $productName,
-                'model' => $model,
             ])->first();
 
             if ($existingStock) {
@@ -82,8 +83,7 @@ class warehouseStockController extends Controller
                     'warehouse_name' => $warehouseName,
                     'category' => $category,
                     'product_name' => $productName,
-                    'model' => $model,
-                    'unit' => $model,
+                    'brand' => $model,
                     'quantity' => $quantity,
                 ]);
             }
@@ -98,7 +98,7 @@ class warehouseStockController extends Controller
         if (Auth::id()) {
             $userId = Auth::id();
             // dd($userId);
-            $WarehouseStocks = WarehouseStock::where('admin_or_user_id', '=', $userId)->get();
+            $WarehouseStocks = WarehouseStock::get();
             return view('admin_panel.warehousestock.listing_warehouse_stock', [
                 'WarehouseStocks' => $WarehouseStocks
             ]);
@@ -113,7 +113,7 @@ class warehouseStockController extends Controller
             $userId = Auth::id();
             // dd($userId);
             $Warehouses = Warehouse::get();
-            $Categories = Category::get();
+            $Categories = ItemCategory::get();
             // dd($Purchases);
             return view('admin_panel.warehousestock.product_warehouse_stock', [
                 'Warehouses' => $Warehouses,
@@ -129,9 +129,9 @@ class warehouseStockController extends Controller
     {
         $categoryName = $request->input('categoryName');
 
-        // Fetch products with their name and unit
-        $products = Product::where('category', $categoryName)
-            ->select('id', 'product_name', 'unit')
+        // Fetch products with their name and brand
+        $products = ItemProduct::where('category', $categoryName)
+            ->select('id', 'product_name', 'brand')
             ->get();
 
         return response()->json($products);
@@ -166,7 +166,7 @@ class warehouseStockController extends Controller
         if (Auth::id()) {
             $userId = Auth::id();
             $Warehouses = Warehouse::get();
-            $Categories = Category::get();
+            $Categories = ItemCategory::get();
             // $Products = Product::with('warehouseStock')->get();
             // dd($Products); // Debugging ke liye
             return view('admin_panel.warehousestock.warehouse_to_shop_stock', [
@@ -213,7 +213,7 @@ class warehouseStockController extends Controller
             $warehouseStock->save();
 
             // Update Product Stock
-            $product = Product::where('product_name', $request->product_name)->first();
+            $product = ItemProduct::where('product_name', $request->product_name)->first();
             if (!$product) {
                 return back()->with('error', 'Product not found.');
             }
@@ -241,7 +241,7 @@ class warehouseStockController extends Controller
         if (Auth::id()) {
             $userId = Auth::id();
             $Warehouses = Warehouse::all();
-            $Categories = Category::all();
+            $Categories = ItemCategory::all();
             $StockTransfers = StockTransfer::latest()->get(); // Get all stock transfers
 
             return view('admin_panel.warehousestock.All_Stock_Transfer', [
@@ -252,5 +252,20 @@ class warehouseStockController extends Controller
         } else {
             return redirect()->back();
         }
+    }
+
+    public function getitemsbycategoryproduct($categoryId)
+    {
+        $items = ItemProduct::where('category', $categoryId)->get(); // Adjust according to your database structure
+        return response()->json($items);
+    }
+
+
+    public function getunitbyitemproduct($productId)
+    {
+        $product = ItemProduct::where('product_name', $productId)->first();
+        return response()->json([
+            'brand' => $product->brand,
+        ]);
     }
 }

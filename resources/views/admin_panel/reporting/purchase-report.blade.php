@@ -61,8 +61,6 @@
                                                 <tr>
                                                     <th>Invoice No</th>
                                                     <th>Purchase Date</th>
-                                                    <th> Warehouse </th>
-                                                    <th>Supplier Name</th>
                                                     <th>Items Category</th>
                                                     <th>Items Name</th>
                                                     <th>Quantity</th>
@@ -95,7 +93,7 @@
         const doc = new jsPDF();
 
         // Table Heading
-        let headers = ['Invoice No', 'Purchase Date', 'Warehouse', 'Supplier Name', 'Items Category', 'Item Name',
+        let headers = ['Invoice No', 'Purchase Date', 'Items Category', 'Item Name',
             'Quantity'
         ];
 
@@ -178,8 +176,6 @@
             tableData += `<tr>
                 <td>${purchase.invoice_no || 'N/A'}</td>
                 <td>${purchase.purchase_date || 'N/A'}</td>
-                <td>${purchase.warehouse_id || 'N/A'}</td>
-                <td>${purchase.supplier_name || 'N/A'}</td>
                 <td>${itemCategory}</td>
                 <td>${itemName}</td>
                 <td>${quantity}</td>

@@ -15,7 +15,7 @@ class StockTransfer extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ItemProduct::class);
     }
 
     public function warehouse()

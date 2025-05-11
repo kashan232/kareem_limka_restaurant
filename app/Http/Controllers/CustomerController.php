@@ -15,11 +15,8 @@ class CustomerController extends Controller
     {
         if (Auth::id()) {
             $userId = Auth::id();
-            // dd($userId);
-            $Customers = Customer::where('admin_or_user_id', $userId)
-                ->leftJoin('customer_credits', 'customers.id', '=', 'customer_credits.customerId')
-                ->select('customers.*', 'customer_credits.closing_balance')
-                ->get();
+            // dd($userId); 
+            $Customers = Customer::get();
             return view('admin_panel.customers.customers', [
                 'Customers' => $Customers
             ]);
@@ -30,17 +27,19 @@ class CustomerController extends Controller
 
     public function store_customer(Request $request)
     {
+        // dd($request->toArray());
+        $lastCustomer = Customer::latest('id')->first(); // Last customer ka ID find karega
+        $nextId = $lastCustomer ? $lastCustomer->id + 1 : 1; // Agar koi customer nahi mila toh 1 set karega
+        
+        // dd('CUST-' . str_pad($nextId, 4, '0', STR_PAD_LEFT));
         if (Auth::id()) {
             $usertype = Auth()->user()->usertype;
             $userId = Auth::id();
             Customer::create([
-                'admin_or_user_id'    => $userId,
-                'customer_name'          => $request->customer_name,
-                'customer_email'          => $request->customer_email,
-                'customer_phone'          => $request->customer_phone,
-                'customer_address'          => $request->customer_address,
-                'created_at'        => Carbon::now(),
-                'updated_at'        => Carbon::now(),
+                'name'          => $request->customer_name,
+                'phone'          => $request->customer_phone,
+                'address'          => $request->customer_address,
+                'identity'          => 'CUST-' . str_pad($nextId, 4, '0', STR_PAD_LEFT),
             ]);
             return redirect()->back()->with('success', 'Customer has been  created successfully');
         } else {
@@ -61,7 +60,6 @@ class CustomerController extends Controller
 
             Customer::where('id', $update_id)->update([
                 'customer_name'          => $name,
-                'customer_email'          => $email,
                 'customer_phone'          => $phone,
                 'customer_address'          => $address,
                 'updated_at' => Carbon::now(),

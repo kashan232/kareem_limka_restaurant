@@ -16,7 +16,7 @@
             <div class="bodywrapper__inner">
 
                 <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
-                    <h6 class="page-title">Warehouse To Shop</h6>
+                    <h6 class="page-title">Warehouse To Office</h6>
                 </div>
 
                 <div class="row gy-3">
@@ -124,7 +124,7 @@
 
                             $.each(data, function(index, product) {
                                 productSelect.append(
-                                    '<option value="' + product.product_name + '" data-unit="' + product.unit + '">' +
+                                    '<option value="' + product.product_name + '" data-brand="' + product.brand + '">' +
                                     product.product_name + '</option>'
                                 );
                             });
@@ -140,9 +140,9 @@
 
             $('#productSelect').on('change', function() {
                 var selectedOption = $(this).find(':selected');
-                var unit = selectedOption.data('unit');
+                var brand = selectedOption.data('brand');
 
-                $('input[name="model"]').val(unit); // Assign unit to the model input
+                $('input[name="model"]').val(brand); // Assign brand to the model input
             });
 
 

@@ -40,7 +40,7 @@
                                                     <div class="thumb">
                                                         <div class="avatar-preview">
                                                             <div class="profilePicPreview"
-                                                                style="background-image: url(https://script.viserlab.com/sukkur_kitchen/placeholder-image/400x400)">
+                                                                style="background-image: url(https://script.viserlab.com//placeholder-image/400x400)">
                                                                 <button type="button" class="remove-image"><i
                                                                         class="fa fa-times"></i></button>
                                                             </div>
@@ -144,7 +144,7 @@
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label>Price</label>
-                                                        <input type="number" name="retail_price"
+                                                        <input type="number" name="price"
                                                             class="form-control" value="0">
                                                     </div>
                                                 </div>

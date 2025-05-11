@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\ItemCategory;
 use App\Models\Product;
 use App\Models\Unit;
 use App\Models\Subcategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -17,13 +19,12 @@ class ProductController extends Controller
     {
         if (Auth::id()) {
             $userId = Auth::id();
-            // $all_unit = Unit::where('admin_or_user_id', '=', $userId)->get();
-            $all_product = Product::with(['category', 'subcategory'])->get();
 
-            // dd($all_product);
+            $all_products = Product::with(['category', 'subcategory', 'unit'])
+                ->get();
+
             return view('admin_panel.product.all_product', [
-                // 'all_unit' => $all_unit
-                'all_product' => $all_product,
+                'all_products' => $all_products,
             ]);
         } else {
             return redirect()->back();
@@ -73,6 +74,21 @@ class ProductController extends Controller
         return response()->json($items);
     }
 
+    public function delete_product(Request $request)
+    {
+        if (Auth::id()) {
+            $product = Product::find($request->id);
+
+            if ($product) {
+                $product->delete();
+                return response()->json(['success' => true, 'message' => 'Product deleted successfully.']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Product not found.']);
+            }
+        }
+        return response()->json(['success' => false, 'message' => 'Unauthorized request.']);
+    }
+
 
 
     public function store_product(Request $request)
@@ -85,17 +101,16 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/products'), $imageName); // ✅ Correct path
+                $image->move(public_path('product_images'), $imageName);
             }
-        
+
             // Create product
             Product::create([
-                'admin_or_user_id'    => $userId,
-                'name'   => $request->product_name, 
+                'name'          => $request->product_name,
                 'category_id'   => $request->category,
                 'subcategory_id' => $request->sub_category,
-                'unit'       => $request->unit_id,
-                'retail_price'         => $request->retail_price,
+                'unit_id'       => $request->unit,
+                'price'         => $request->price,
                 'image'         => $imageName, // This will be null if no image is uploaded
             ]);
 
@@ -113,7 +128,6 @@ class ProductController extends Controller
             $all_brand = Brand::where('admin_or_user_id', '=', $userId)->get();
             $all_unit = Unit::where('admin_or_user_id', '=', $userId)->get();
             $product_details = Product::findOrFail($id);
-            // dd($product_details);
             return view('admin_panel.product.edit_product', [
                 'all_category' => $all_category,
                 'all_brand' => $all_brand,
@@ -153,15 +167,12 @@ class ProductController extends Controller
                 $product->image = $imageName;
             }
 
-            // Update product details
-            $product->product_name   = $request->product_name;
-            $product->category       = $request->category;
-            $product->brand          = $request->brand;
-            $product->sku            = $request->sku;
-            $product->unit           = $request->unit;
-            $product->alert_quantity = $request->alert_quantity;
-            $product->retail_price   = $request->retail_price;  // Including retail price update
-            $product->note           = $request->note;
+            $product->name        = $request->name;
+            $product->category_id = $request->category;
+            $product->subcategory_id = $request->subcategory_id;
+            $product->unit_id     = $request->unit_id;
+            $product->price       = $request->price;
+
             $product->updated_at     = Carbon::now();
 
             // Save updated product
@@ -200,10 +211,28 @@ class ProductController extends Controller
     {
         if (Auth::id()) {
             $userId = Auth::id();
-            $lowStockProducts = Product::whereRaw('CAST(stock AS UNSIGNED) <= CAST(alert_quantity AS UNSIGNED)')->get();
-            // dd($lowStockProducts);
+
+            // Get today's date
+            $today = \Carbon\Carbon::today();
+
+            // Get the date 5 days later without modifying the original `$today`
+            $fiveDaysLater = $today->copy()->addDays(5);
+
+            // Orders with delivery date within the next 5 days
+            $ordersAlertCount = DB::table('orders')
+                ->whereRaw('DATE(delivery_date) <= ?', [$fiveDaysLater->toDateString()])
+                ->whereRaw('DATE(delivery_date) >= ?', [$today->toDateString()])
+                ->count();
+
+            // Get all orders with delivery date within the next 5 days for display
+            $ordersWithAlert = DB::table('orders')
+                ->whereRaw('DATE(delivery_date) <= ?', [$fiveDaysLater->toDateString()])
+                ->whereRaw('DATE(delivery_date) >= ?', [$today->toDateString()])
+                ->get();
+
             return view('admin_panel.product.product_alerts', [
-                'lowStockProducts' => $lowStockProducts,
+                'ordersAlertCount' => $ordersAlertCount,
+                'ordersWithAlert' => $ordersWithAlert,
             ]);
         } else {
             return redirect()->back();

@@ -28,6 +28,7 @@ class CategoryController extends Controller
             return redirect()->back();
         }
     }
+    
     public function store_category(Request $request)
     {
         if (Auth::id()) {

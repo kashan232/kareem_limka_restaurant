@@ -4,47 +4,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash Memo - Zam Zam Electronic</title>
+    <title>Cash Memo</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
             margin: 0;
             padding: 0;
+            font-size: 12px;
+            background-color: #f4f4f4;
         }
 
         .receipt-container {
-            width: 280px;
-            margin: auto;
-            padding: 10px;
-            border: 1px dashed #000;
+            width: 100%;
+            max-width: 450px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .receipt-header {
             text-align: center;
-            font-size: 14px;
+        }
+
+        .receipt-header img {
+            width: 80px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 20px;
             font-weight: bold;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .receipt-header p {
+            margin: 2px 0;
+            font-size: 12px;
+            color: #555;
         }
 
         .details {
-            margin-top: 10px;
+            margin: 15px 0;
+            line-height: 1.6;
+            font-size: 13px;
         }
 
         .details p {
-            margin: 3px 0;
+            margin: 4px 0;
+        }
+
+        .details strong {
+            color: #333;
         }
 
         table {
             width: 100%;
+            margin-top: 10px;
             font-size: 12px;
             border-collapse: collapse;
-            margin-top: 5px;
         }
 
         th, td {
-            padding: 3px;
+            padding: 6px;
             text-align: left;
-            border-bottom: 1px dashed #000;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            font-weight: bold;
+            background-color: #f9f9f9;
+            color: #333;
         }
 
         .totals td {
@@ -54,24 +87,28 @@
 
         .receipt-footer {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 20px;
             font-size: 12px;
+            color: #555;
         }
 
         .note {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
-            margin-top: 5px;
+            color: #d9534f;
+            margin-bottom: 10px;
         }
 
         @media print {
             body {
                 margin: 0;
-                padding: 0;
             }
 
             .receipt-container {
                 border: none;
+                box-shadow: none;
+                margin: 0;
+                page-break-inside: avoid;
             }
         }
     </style>
@@ -81,21 +118,25 @@
     <div class="receipt-container">
         <!-- Receipt Header -->
         <div class="receipt-header">
-            <p>SHELBYS RESTAURANT <br> & <br> FAST FOOD</p>
+            <img src="../assets/admin/images/BB_logo.png" alt="Company Logo">
+            <h2>Beauty Base Cosmetics</h2>
+            <p><strong>Cash Memo</strong></p>
+            <p><strong>Address:</strong> Resham Bazar</p>
+            <p><strong>Phone:</strong> 0313-300452-0</p>
         </div>
 
         <!-- Sale Details -->
         <div class="details">
-            <p><strong>Invoice No:</strong> {{ $sale->invoice_no }}</p>
+            <p><strong>Memo No:</strong> {{ $sale->invoice_no }}</p>
             <p><strong>Customer:</strong> {{ $sale->customer }}</p>
-            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($sale->created_at)->format('d/m/Y h:i A') }}</p>
+            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($sale->created_at)->format('F d, Y h:i A') }}</p>
         </div>
 
         <!-- Items Table -->
         <table>
             <thead>
                 <tr>
-                    <th>Item</th>
+                    <th>Description</th>
                     <th>Qty</th>
                     <th>Rate</th>
                     <th>Total</th>
@@ -113,7 +154,7 @@
             </tbody>
             <tfoot>
                 <tr class="totals">
-                    <td colspan="3">Total</td>
+                    <td colspan="3">Total Amount</td>
                     <td>{{ $sale->total_price }}</td>
                 </tr>
                 <tr class="totals">
@@ -122,14 +163,27 @@
                 </tr>
                 <tr class="totals">
                     <td colspan="3">Net Total</td>
-                    <td>{{ $sale->Payable_amount }}</td>
+                    <td><strong>{{ $sale->Payable_amount }}</strong></td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="3">Previous Balance</td>
+                    <td>{{ $previous_balance }}</td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="3">Closing Balance</td>
+                    <td>{{ $closing_balance }}</td>
+                </tr>
+                <tr class="totals">
+                    <td colspan="3">Cash Received</td>
+                    <td>{{ $sale->cash_received }}</td>
                 </tr>
             </tfoot>
         </table>
 
         <!-- Footer Message -->
         <div class="receipt-footer">
-            <p class="note">No Exchange or Refund</p>
+            <p class="note">Goods Once Sold Are Not Returnable</p>
+            <p>Thank you for your purchase!</p>
             <p>Designed & Developed by ProWave Software Solution</p>
             <p><strong>0317-3836223 | 0317-3859647</strong></p>
         </div>

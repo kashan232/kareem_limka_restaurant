@@ -64,7 +64,7 @@
                                                     <tr>
                                                         <th>Category</th>
                                                         <th>Name</th>
-                                                        <th>Unit</th>
+                                                        <th>brand</th>
                                                         <th>Quantity<span class="text--danger">*</span></th>
                                                         <th>Price<span class="text--danger">*</span></th>
                                                     </tr>
@@ -85,7 +85,7 @@
                                                             </select>
                                                         </td>
                                                         <td>
-                                                            <input type="text" name="unit[]" class="form-control unit" readonly> <!-- Readonly Unit column -->
+                                                            <input type="text" name="brand[]" class="form-control brand" readonly> <!-- Readonly brand column -->
                                                         </td>
                                                         <td>
                                                             <input type="number" name="quantity[]" class="form-control quantity" required>
@@ -123,7 +123,7 @@
                     const itemSelect = row.querySelector('.item-name');
 
                     if (categoryId) {
-                        fetch(`{{ route('get-items-by-category', ':categoryId') }}`.replace(':categoryId', categoryId))
+                        fetch(`{{ route('get-items-by-category-product', ':categoryId') }}`.replace(':categoryId', categoryId))
                             .then(response => response.json())
                             .then(items => {
                                 itemSelect.innerHTML = '<option value="" disabled selected>Select Item</option>';
@@ -143,20 +143,20 @@
                 }
             });
 
-            // Event delegation for product selection to populate Unit
+            // Event delegation for product selection to populate brand
             purchaseItems.addEventListener('change', function(e) {
                 if (e.target.classList.contains('item-name')) {
                     const productId = e.target.value;
                     const row = e.target.closest('tr');
-                    const unitInput = row.querySelector('.unit');
+                    const brandInput = row.querySelector('.brand');
 
                     if (productId) {
-                        fetch(`{{ route('get-unit-by-product', ':productId') }}`.replace(':productId', productId))
+                        fetch(`{{ route('get-brand-by-itemproduct', ':productId') }}`.replace(':productId', productId))
                             .then(response => response.json())
                             .then(product => {
-                                unitInput.value = product.unit ? product.unit : ''; // Handle cases where the unit is not found
+                                brandInput.value = product.brand ? product.brand : ''; // Handle cases where the brand is not found
                             })
-                            .catch(error => console.error('Error fetching unit:', error));
+                            .catch(error => console.error('Error fetching brand:', error));
                     }
                 }
             });
@@ -180,7 +180,7 @@
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="unit[]" class="form-control unit" readonly>
+                        <input type="text" name="brand[]" class="form-control brand" readonly>
                     </td>
                     <td>
                         <input type="number" name="quantity[]" class="form-control quantity" required>

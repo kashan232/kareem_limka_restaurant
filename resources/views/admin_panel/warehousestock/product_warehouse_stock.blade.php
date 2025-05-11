@@ -114,7 +114,7 @@
 
                             $.each(data, function(index, product) {
                                 productSelect.append(
-                                    '<option value="' + product.product_name + '" data-unit="' + product.unit + '">' +
+                                    '<option value="' + product.product_name + '" data-brand="' + product.brand + '">' +
                                     product.product_name + '</option>'
                                 );
                             });
@@ -130,9 +130,9 @@
 
             $('#productSelect').on('change', function() {
                 var selectedOption = $(this).find(':selected');
-                var unit = selectedOption.data('unit');
+                var brand = selectedOption.data('brand');
 
-                $('input[name="model"]').val(unit); // Assign unit to the model input
+                $('input[name="model"]').val(brand); // Assign brand to the model input
             });
 
             $('#filterSalesBtn').on('click', function() {
@@ -155,14 +155,14 @@
 
                             $.each(data, function(index, value) {
                                 var quantity = value.quantity ? value.quantity : '0'; // Default to '0' if not set
-                                var unit = value.unit ? value.unit : 'N/A'; // Handle missing unit
+                                var brand = value.brand ? value.brand : 'N/A'; // Handle missing brand
 
                                 $('#stockTable tbody').append(
                                     '<tr>' +
                                     '<td>' + warehouseName + '</td>' +
                                     '<td>' + categoryName + '</td>' +
                                     '<td>' + value.product_name + '</td>' +
-                                    '<td>' + unit + '</td>' + // Display unit
+                                    '<td>' + brand + '</td>' + // Display brand
                                     '<td>' + quantity + '</td>' +
                                     '</tr>'
                                 );

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +26,13 @@
             background-size: cover;
             background-position: center;
         }
-
+        body::before {
+            content: '';
+            width: 100%;
+            height: 100%;
+            background: #0000006e;
+            position: absolute;
+        }
         .wrapper {
 
 
@@ -55,7 +60,7 @@
             height: 3px;
             width: 48px;
             border-radius: 12px;
-            background: #e20000;
+            background: #dbb418;
         }
 
         .wrapper form {
@@ -98,7 +103,7 @@
 
         .input-box input:focus,
         .input-box input:valid {
-            border-color: #e20000;
+            border-color: #dbb418;
         }
 
         form .policy {
@@ -117,12 +122,12 @@
             color: #fff;
             letter-spacing: 1px;
             border: none;
-            background: #e20000;
+            background: #dbb418;
             cursor: pointer;
         }
 
         .input-box.button input:hover {
-            background: #e20000;
+            background: #dbb418;
         }
 
         form .text h3 {
@@ -153,28 +158,28 @@
             background-color: #f8d7da;
             border-color: #f5c6cb;
         }
-    </style>
+    </style> 
     <div class="wrapper">
         <div style="width:100%; text-align:center;">
-            <img src="assets/admin/images/logo.jpg" alt="image" style="width: 150px; height:150px; border-radius:50%">
+            <img src="assets/admin/images/logo.png" alt="image" style="width: 150px; background:#000;border-radius:100px;">
         </div>
         <!-- <h2>Admin Login</h2> -->
         <form method="POST" action="{{ route('login') }}">
             @csrf
             @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-                @endforeach
-            </div>
-            @endif
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                    @endif
 
             <div class="input-box">
-                <x-input-label for="email" />
+                <x-input-label for="email"/>
                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" placeholder="Email" required autofocus autocomplete="username" />
             </div>
-            <div class="input-box">
-                <x-input-label for="password" />
+            <div class="input-box"> 
+                <x-input-label for="password"/>
                 <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" placeholder="Password" required autocomplete="current-password" />
             </div>
             <div class="input-box button">
@@ -184,6 +189,5 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
         crossorigin="anonymous"></script>
-    </body>
-
+</body>
 </html>

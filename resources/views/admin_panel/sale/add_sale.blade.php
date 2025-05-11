@@ -50,7 +50,7 @@
                 <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
                     <h6 class="page-title">Add Sale</h6>
                     <div class="d-flex flex-wrap justify-content-end gap-2 align-items-center breadcrumb-plugins">
-                        <a href="https://script.viserlab.com/torylab/admin/purchase/all"
+                        <a href="https://script.viserlab.com//admin/purchase/all"
                             class="btn btn-sm btn-outline--primary">
                             <i class="la la-undo"></i> Back</a>
                     </div>
@@ -71,7 +71,14 @@
                                         <div class="col-xl-4 col-sm-6">
                                             <div class="form-group" id="supplier-wrapper">
                                                 <label class="form-label">Customers</label>
-                                                <input type="text" name="customer" class="form-control" placeholder="Walk-In">
+                                                <select name="customer_info" class="select2-basic form-control" id="customer-select" required>
+                                                    <option selected disabled>Select One</option>
+                                                    @foreach($Customers as $Customer)
+                                                    <option value="{{ $Customer->id . '|' . $Customer->customer_name }}">
+                                                        {{ $Customer->customer_name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                         </div>
 
@@ -83,6 +90,17 @@
                                                     required>
                                             </div>
                                         </div>
+                                        <div class="col-xl-4 col-sm-6">
+                                            <div class="form-group">
+                                                <label class="form-label">Warehouse</label>
+                                                <select name="warehouse_id" class="form-control " required>
+                                                    <option selected disabled>Select One</option>
+                                                    @foreach($Warehouses as $Warehouse)
+                                                    <option value="{{ $Warehouse->name }}">{{ $Warehouse->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- Product Items List -->
                                     <div class="row mt-2 mb-2">
@@ -91,6 +109,9 @@
                                             <input type="text" id="productSearch" placeholder="Search Products..." class="form-control">
                                             <ul id="searchResults" class="list-group"></ul>
                                         </div>
+
+
+
                                     </div>
                                     <div class="row mb-3">
                                         <div class="table-responsive">
@@ -115,6 +136,10 @@
 
                                     <div class="row">
                                         <div class="col-md-8 col-sm-6">
+                                            <div class="form-group">
+                                                <label>Sale Note</label>
+                                                <textarea name="note" class="form-control"></textarea>
+                                            </div>
                                         </div>
 
                                         <div class="col-md-4 col-sm-6">
@@ -148,15 +173,54 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                
+
+                                                <div class="col-xl-12 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Previous Balance</label>
+                                                        <input type="text" class="form-control" id="previous_balance" name="previous_balance" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Closing Balance</label>
+                                                        <div class="input-group">
+                                                            <input type="text" id="closing_balance" name="closing_balance" class="form-control" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- <div class="col-sm-12">
+                                                    <div class="form-group">
+                                                        <label>Cash Received</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Pkr</span>
+                                                            <input type="number" name="cash_received" id="cashReceived" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                                
+                                                <!-- Cash Payment Fields End -->
+
                                             </div>
                                         </div>
+
                                     </div>
+
+
+
+
                                     <button type="submit" class="btn btn--primary w-100 h-45">Submit</button>
+
+
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
             </div><!-- bodywrapper__inner end -->
         </div><!-- body-wrapper end -->
 

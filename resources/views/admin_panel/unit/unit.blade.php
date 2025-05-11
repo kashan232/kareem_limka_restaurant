@@ -15,11 +15,11 @@
             <div class="bodywrapper__inner">
 
                 <div class="d-flex mb-30 flex-wrap gap-3 justify-content-between align-items-center">
-                    <h6 class="page-title">Sizes</h6>
+                    <h6 class="page-title">Units</h6>
                     <div class="d-flex flex-wrap justify-content-end gap-2 align-items-center breadcrumb-plugins">
                        
                         <button type="button" class="btn btn-sm btn-outline--primary cuModalBtn"
-                            data-modal_title="Add New Size">
+                            data-modal_title="Add New Unit">
                             <i class="las la-plus"></i>Add New </button>
                      
                     </div>
@@ -40,7 +40,7 @@
                                             <tr>
                                                 <th>S.N.</th>
                                                 <th>Name</th>
-                                                <th>Prodcuts</th>
+                                                {{-- <th>Prodcuts</th> --}}
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -49,7 +49,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $unit->unit }}</td>
-                                                <td>{{ $unit->products_count }}</td>
+                                                {{-- <td>{{ $unit->products_count }}</td> --}}
                                                 <td>
                                                     <div class="button--group">
                                                         <button type="button"
@@ -59,7 +59,7 @@
                                                         {{-- <button type="button"
                                                             class="btn btn-sm btn-outline-danger  disabled  confirmationBtn"
                                                             data-question="Are you sure to delete this unit?"
-                                                            data-action="https://script.viserlab.com/torylab/admin/unit/delete/9">
+                                                            data-action="https://script.viserlab.com//admin/unit/delete/9">
                                                             <i class="la la-trash"></i>Delete </button> --}}
                                                     </div>
                                                 </td>
@@ -104,7 +104,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editunitLabel">Edit Brand</h5>
+                            <h5 class="modal-title" id="editunitLabel">Edit Unit</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -136,7 +136,7 @@
                                     <i class="la la-times" aria-hidden="true"></i>
                                 </button>
                             </div>
-                            <form method="post" action="https://script.viserlab.com/torylab/admin/unit/import"
+                            <form method="post" action="https://script.viserlab.com//admin/unit/import"
                                 id="importForm" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" value="zv105s8kd1s2nyZ6nvoqU6pROYAnsCPYkYXTDlWn">
                                 <div class="modal-body">
@@ -160,7 +160,7 @@
                                             </small>
                                             <small>
                                                 Download sample template file from here <a
-                                                    href="https://script.viserlab.com/torylab/assets/files/sample/unit.csv"
+                                                    href="https://script.viserlab.com//assets/files/sample/unit.csv"
                                                     title="Download csv file" class="text--primary" download>
                                                     <b>csv</b>
                                                 </a>
