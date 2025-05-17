@@ -14,8 +14,9 @@ class Unit extends Model
      // In Brand model
      public function products()
      {
-         return $this->hasMany(Product::class, 'unit', 'unit');
+         return $this->hasMany(Product::class, 'unit_id', 'id');
      }
+     
      
     protected $fillable = [
         'admin_or_user_id',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Subcategory;
 use App\Models\Customer;
 use App\Models\CustomerCredit;
 use App\Models\Product;
@@ -35,45 +36,47 @@ class SaleController extends Controller
     {
         if (Auth::id()) {
             $userId = Auth::id();
-            // dd($userId);
             $Customers = Customer::get();
             $Warehouses = Warehouse::get();
             $Category = Category::get();
-
-            // dd($Customers);
+            $AllProducts = Product::select('id','name as product_name','price as retail_price','image')->get();
+    
             return view('admin_panel.sale.add_sale', [
                 'Customers' => $Customers,
                 'Warehouses' => $Warehouses,
                 'Category' => $Category,
+                'AllProducts' => $AllProducts,
             ]);
         } else {
             return redirect()->back();
         }
     }
-
+    
     public function getItemsByCategory($categoryId)
     {
-        $items = Product::where('category', $categoryId)->get(); // Adjust according to your database structure
+        $unit = request('unit'); // optional unit filter (like Large)
+    
+        $items = Product::where('category_id', $categoryId)
+            ->when($unit, function ($query) use ($unit) {
+                $query->whereHas('unit', function ($q) use ($unit) {
+                    $q->where('name', $unit); // unit name like 'Large', 'Small'
+                });
+            })
+            ->get(['id', 'name as product_name', 'price as retail_price', 'image']);
+    
         return response()->json($items);
     }
+    
+
+    
+    
+    
+    
+     
+    
 
 
-    public function view($id)
-    {
-        // Fetch the purchase details
-        $purchase = Purchase::findOrFail($id);
 
-        // Decode the JSON fields if necessary
-        $purchase->item_category = json_decode($purchase->item_category);
-        $purchase->item_name = json_decode($purchase->item_name);
-        $purchase->quantity = json_decode($purchase->quantity);
-        $purchase->price = json_decode($purchase->price);
-        $purchase->total = json_decode($purchase->total);
-
-        return view('admin_panel.purchase.view', [
-            'purchase' => $purchase,
-        ]);
-    }
 
     public function store_Sale(Request $request)
     {
@@ -216,128 +219,22 @@ class SaleController extends Controller
     }
 
 
+    public function view($id)
+    {
+        // Fetch the purchase details
+        $purchase = Purchase::findOrFail($id);
 
+        // Decode the JSON fields if necessary
+        $purchase->item_category = json_decode($purchase->item_category);
+        $purchase->item_name = json_decode($purchase->item_name);
+        $purchase->quantity = json_decode($purchase->quantity);
+        $purchase->price = json_decode($purchase->price);
+        $purchase->total = json_decode($purchase->total);
 
-    // public function store_Sale(Request $request)
-    // {
-    //     $invoiceNo = Sale::generateInvoiceNo();
-    //     \Log::info('Request Data:', $request->all());
-
-    //     $discount = (float)($request->input('discount', 0));
-    //     $totalPrice = (float)$request->input('total_price', 0);
-    //     $cashReceived = (float)$request->input('cash_received', 0);
-    //     $changeToReturn = (float)$request->input('change_to_return', 0);
-
-    //     \Log::info('Processed Values:', [
-    //         'discount' => $discount,
-    //         'total_price' => $totalPrice,
-    //         'cash_received' => $cashReceived,
-    //         'change_to_return' => $changeToReturn,
-    //     ]);
-
-    //     $usertype = Auth()->user()->usertype;
-    //     $userId = Auth::id();
-
-    //     $itemNames = $request->input('item_name', []);
-    //     $itemCategories = $request->input('item_category', []);
-    //     $quantities = $request->input('quantity', []);
-
-    //     // Step 1: Validate stock for all products
-    //     foreach ($itemNames as $key => $item_name) {
-    //         $item_category = $itemCategories[$key] ?? '';
-    //         $quantity = $quantities[$key] ?? 0;
-
-    //         $product = Product::where('product_name', $item_name)
-    //             ->where('category', $item_category)
-    //             ->first();
-
-    //         if (!$product) {
-    //             return redirect()->back()->with('error', "Product $item_name in category $item_category not found.");
-    //         }
-
-    //         if ($product->stock < $quantity) {
-    //             return redirect()->back()->with('error', "Insufficient stock for product $item_name. Available: {$product->stock}, Required: $quantity.");
-    //         }
-    //     }
-
-    //     $customerInfo = explode('|', $request->input('customer_info'));
-    //     if (count($customerInfo) < 2) {
-    //         return redirect()->back()->with('error', 'Invalid customer information format.');
-    //     }
-
-    //     $customerId = $customerInfo[0];
-    //     $customerName = $customerInfo[1];
-
-    //     $netTotal = $totalPrice - $discount;
-
-    //     $customerCredit = CustomerCredit::where('customerId', $customerId)->first();
-
-    //     $previousBalance = $customerCredit ? $customerCredit->closing_balance : 0;
-    //     $closingBalance = $previousBalance + $netTotal;
-
-    //     if ($cashReceived > 0) {
-    //         $closingBalance -= $cashReceived; // Deduct cash received from the closing balance
-    //     }
-
-    //     if ($customerCredit) {
-    //         $customerCredit->net_total = $netTotal;
-    //         $customerCredit->closing_balance = $closingBalance;
-    //         $customerCredit->previous_balance = $previousBalance;
-    //         $customerCredit->save();
-    //     } else {
-    //         CustomerCredit::create([
-    //             'customerId' => $customerId,
-    //             'customer_name' => $customerName,
-    //             'previous_balance' => $previousBalance,
-    //             'net_total' => $netTotal,
-    //             'closing_balance' => $closingBalance,
-    //         ]);
-    //     }
-
-    //     $saleData = [
-    //         'userid' => $userId,
-    //         'user_type' => $usertype,
-    //         'invoice_no' => $invoiceNo,
-    //         'customerId' => $customerId,
-    //         'customer' => $customerName,
-    //         'sale_date' => $request->input('sale_date', ''),
-    //         'warehouse_id' => $request->input('warehouse_id', ''),
-    //         'item_category' => json_encode($request->input('item_category', [])),
-    //         'item_name' => json_encode($request->input('item_name', [])),
-    //         'quantity' => json_encode($request->input('quantity', [])),
-    //         'price' => json_encode($request->input('price', [])),
-    //         'total' => json_encode($request->input('total', [])),
-    //         'note' => $request->input('note', ''),
-    //         'total_price' => $totalPrice,
-    //         'discount' => $discount,
-    //         'Payable_amount' => $netTotal,
-    //         'cash_received' => $cashReceived,
-    //         'change_return' => $changeToReturn,
-    //     ];
-
-    //     $sale = Sale::create($saleData);
-
-    //     foreach ($itemNames as $key => $item_name) {
-    //         $item_category = $itemCategories[$key] ?? '';
-    //         $quantity = $quantities[$key] ?? 0;
-
-    //         $product = Product::where('product_name', $item_name)
-    //             ->where('category', $item_category)
-    //             ->first();
-
-    //         if ($product) {
-    //             $product->stock -= $quantity;
-    //             $product->save();
-    //         }
-    //     }
-
-    //     return redirect()->route('sale-receipt', [
-    //         'id' => $sale->id,
-    //         'previous_balance' => $previousBalance,
-    //         'closing_balance' => $closingBalance,
-    //         'net_total' => $netTotal,
-    //     ])->with('success', 'Sale recorded successfully. Redirecting to receipt...');
-    // }
+        return view('admin_panel.purchase.view', [
+            'purchase' => $purchase,
+        ]);
+    }
 
 
     public function all_sales()
@@ -357,7 +254,6 @@ class SaleController extends Controller
             return redirect()->back();
         }
     }
-
     public function get_customer_amount($id)
     {
         // Fetch the customer by customer_id (not id)
@@ -373,6 +269,7 @@ class SaleController extends Controller
             'previous_balance' => $customer->previous_balance // Ensure this field exists in your model
         ]);
     }
+
 
 
     public function downloadInvoice($id)

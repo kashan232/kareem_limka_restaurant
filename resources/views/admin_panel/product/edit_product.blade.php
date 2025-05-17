@@ -75,7 +75,7 @@
 
                                                     </div>
                                                 </div>
-                                                <div class=" col-sm-6">
+                                                {{-- <div class=" col-sm-6">
                                                     <div class="form-group">
                                                         <div class="form-group" id="brand-wrapper">
                                                             <label class="form-label">Sub Category</label>
@@ -84,7 +84,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label>Unit(UoM)</label>

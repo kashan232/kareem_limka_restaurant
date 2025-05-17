@@ -7,6 +7,7 @@ use App\Http\Controllers\Sub_cat_Cotnroller;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ItemCategoryController;
+use App\Http\Controllers\TableController;
 use App\Http\Controllers\ItemProductController;
 use App\Http\Controllers\KitchenInventoryController;
 use App\Http\Controllers\MenuEstimateController;
@@ -91,6 +92,12 @@ Route::get('/get-subcategories/{category}', [ProductController::class, 'getSubca
 Route::get('/get-items/{category}/{subcategory}', [ProductController::class, 'getItems'])->name('get.items');
 Route::post('/delete-product', [ProductController::class, 'delete_product'])->name('delete.product');
 
+Route::get('/tables', [TableController::class, 'index'])->name('tables');
+Route::post('/store-table', [TableController::class, 'store'])->name('store-table');
+Route::post('/update-table', [TableController::class, 'update'])->name('update-table');
+
+
+Route::get('/testing', [TableController::class, 'testing']);
 
 //Order
 Route::get('/all-order', [OrderController::class, 'all_order'])->name('all-order');
@@ -180,7 +187,18 @@ Route::get('/add-Sale', [SaleController::class, 'add_Sale'])->name('add-Sale');
 Route::post('/store-Sale', [SaleController::class, 'store_Sale'])->name('store-Sale');
 Route::get('/all-sales', [SaleController::class, 'all_sales'])->name('all-sales');
 Route::get('/get-customer-amount/{id}', [SaleController::class, 'get_customer_amount'])->name('get-customer-amount');
+// Route::get('/get-items-by-category/{category}', [SaleController::class, 'getItemsByCategory'])->name('get-items-by-category');
+Route::get('/sale/items-by-category/{id}', [SaleController::class,'getItemsByCategory']) ->name('sale.get-items-by-category');
+Route::get('/sale/items-by-unit/{unit}', [SaleController::class, 'getItemsByUnit'])->name('sale.get-items-by-unit');
 
+// // 1. Get subcategories of a category
+// Route::get('/get-subcategories/{categoryId}', [SaleController::class, 'getSubcategories'])
+//      ->name('get-subcategories');
+
+// // 2. Get products of a subcategory
+// Route::get('/get-products/{subcatId}', [SaleController::class, 'getProductsBySubcategory'])
+//      ->name('get-products-by-subcategory');
+     
 
 // Route for downloading invoice
 Route::get('/invoice/download/{id}', [SaleController::class, 'downloadInvoice'])->name('invoice.download');
