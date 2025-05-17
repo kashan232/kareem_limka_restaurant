@@ -19,14 +19,8 @@ class HomeController extends Controller
 
     public function welcome(Request $request)
     {
-        $products = Product::all(); // Sare products le ayega
-
-        $all_categories = Category::get()
-            ->map(function ($category) {
-                $category->products_count = $category->products()->count();
-                return $category;
-            });
-        return view('welcome', compact('products', 'all_categories'));
+       
+        return view('welcome');
     }
 
     public function home()
