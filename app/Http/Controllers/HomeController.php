@@ -6,6 +6,9 @@ use App\Models\AccountantLedger;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\RestaurantTable;
+use App\Models\Subcategory;
+use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +22,7 @@ class HomeController extends Controller
 
     public function welcome(Request $request)
     {
-       
+
         return view('welcome');
     }
 
@@ -29,47 +32,14 @@ class HomeController extends Controller
             $usertype = Auth()->user()->usertype;
 
             if ($usertype == 'staff') {
-
-                // Fetch all categories for the dropdown
-                $categories = Category::all();
-
-                // Initially, load all products for display (optional, can be removed if you prefer to only load products on category change)
-                $products = Product::all();
-                $Customers = Customer::all();
+                $Customers = Customer::get();
                 $Warehouses = Warehouse::get();
+                $Category = Category::get();
+                $Units = Unit::get();
+                $tables = RestaurantTable::get();
+                $AllProducts = Product::select('id', 'name as product_name', 'price as retail_price', 'image')->get();
 
-
-                return view('user_panel.user_dashboard', compact('categories', 'products', 'Customers', 'Warehouses'));
-            } else if ($usertype == 'super admin') {
-                $userId = Auth::id();
-                $totalPurchasesPrice = \App\Models\Purchase::sum('total_price');
-                $totalPurchaseReturnsPrice = \App\Models\PurchaseReturn::sum('total_price');
-                // Fetch all products for the logged-in admin
-                // $all_product = Product::where('admin_or_user_id', '=', $userId)->get();
-                $all_product = Product::get();
-
-                // Calculate total stock value for all products
-                $totalStockValue = $all_product->sum(function ($product) {
-                    return $product->stock * $product->wholesale_price;
-                });
-
-
-                // Calculate total stock value for each product
-                foreach ($all_product as $product) {
-                    $product->total_stock_value = $product->stock * $product->wholesale_price;
-                }
-
-
-                $categories = DB::table('categories')->count();
-                $subcategories = DB::table('subcategories')->count();
-                $products = DB::table('products')->count();
-                $suppliers = DB::table('suppliers')->count();
-                $customers = DB::table('customers')->count();
-                $totalsales = DB::table('sales')->sum('Payable_amount');
-
-                // $lowStockProducts = Product::whereRaw('CAST(stock AS UNSIGNED) <= CAST(alert_quantity AS UNSIGNED)')->get();
-                // dd($lowStockProducts);
-                return view('Super_admin.superadmin_dashboard', compact('totalPurchasesPrice', 'subcategories', 'totalPurchaseReturnsPrice', 'all_product', 'totalStockValue', 'categories', 'products', 'suppliers', 'customers', 'totalsales'));
+                return view('user_panel.user_dashboard', compact('Customers', 'Warehouses', 'Category', 'AllProducts', 'tables', 'Units'));
             } else if ($usertype == 'admin') {
                 $userId = Auth::id();
                 $totalPurchasesPrice = \App\Models\Purchase::sum('total_price');
@@ -100,15 +70,6 @@ class HomeController extends Controller
                 // $lowStockProducts = Product::whereRaw('CAST(stock AS UNSIGNED) <= CAST(alert_quantity AS UNSIGNED)')->get();
                 // dd($lowStockProducts);
                 return view('admin_panel.admin_dashboard', compact('totalPurchasesPrice', 'subcategories', 'totalPurchaseReturnsPrice', 'all_product', 'totalStockValue', 'categories', 'products', 'suppliers', 'customers', 'totalsales'));
-            }
-            if ($usertype == 'Accountant') {
-                // Fetch all categories for the dropdown
-                $accountant = Auth::user();
-
-                $ledger = AccountantLedger::where('accountant_id', $accountant->user_id)->latest()->first();
-
-                $cashInHand = $ledger ? $ledger->cash_in_hand : 0;
-                return view('Accountant_panel.accountant_dashboard', compact('cashInHand'));
             }
         } else {
             return Redirect()->route('login');
@@ -168,29 +129,23 @@ class HomeController extends Controller
         return redirect()->back()->with('success', 'Password changed successfully');
     }
 
-
-    // Staff work 
-
-    public function getProductsByCategory(Request $request)
+    public function get_pos_products(Request $request)
     {
-        $categoryname = $request->categoryname;
-        // dd($categoryname);
-        // Fetch products based on the selected category
-        $products = Product::where('category', $categoryname)->get();
-        // dd($products);
-        // Return JSON response
-        return response()->json($products);
-    }
+        $categoryId = $request->input('category_id');
+        $unit = $request->input('unit');
 
-    public function getProductByBarcode(Request $request)
-    {
-        $barcode = $request->query('barcode'); // Get barcode from query parameters
-        $product = Product::where('barcode_number', $barcode)->first();
+        $query = Product::query();
 
-        if ($product) {
-            return response()->json($product);
-        } else {
-            return response()->json(null, 404);
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
         }
+
+        if ($unit) {
+            $query->where('unit_id', $unit);
+        }
+
+        $products = $query->get();
+
+        return response()->json($products);
     }
 }

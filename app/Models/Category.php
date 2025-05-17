@@ -23,10 +23,9 @@ class Category extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    // Subcategories Relationship
     public function subcategories()
     {
-        return $this->hasMany(Category::class, 'category_id');
+        return $this->hasMany(Subcategory::class, 'category_id');
     }
     protected $fillable = [
         'admin_or_user_id',

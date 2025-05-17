@@ -54,10 +54,7 @@ Route::get('/home', [HomeController::class, 'home'])->middleware(['auth'])->name
 Route::get('/admin-page', [HomeController::class, 'adminpage'])->name('admin-page');
 Route::get('/Admin-Change-Password', [HomeController::class, 'Admin_Change_Password'])->name('Admin-Change-Password');
 Route::post('/updte-change-Password', [HomeController::class, 'updte_change_Password'])->name('updte-change-Password');
-
-// staff dashboard work 
-Route::get('/get-products-by-category', [HomeController::class, 'getProductsByCategory'])->name('get.products.by.category');
-Route::get('/get-product-by-barcode', [HomeController::class, 'getProductByBarcode'])->name('get.product.by.barcode');
+Route::get('/get-pos-products', [HomeController::class, 'get_pos_products'])->name('get-pos-products');
 
 
 //category
