@@ -1,5 +1,11 @@
 @include('admin_panel.include.header_include')
 <style>
+    .navbar-wrapper{
+        margin-left: 90px !important;
+    }
+    .body-wrapper {
+        margin-left: 90px !important;
+    }
     .sidebar {
         width: 100px !important; 
         }
